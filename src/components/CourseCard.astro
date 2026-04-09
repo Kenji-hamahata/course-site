@@ -1,0 +1,93 @@
+---
+interface Props {
+  slug: string;
+  name: string;
+  catchcopy: string;
+  description: string;
+  tools: string[];
+  mainColor: string;
+}
+
+const { slug, name, catchcopy, description, tools, mainColor } = Astro.props;
+---
+
+<a href={`/courses/${slug}`} class="course-card">
+  <div class="card-banner" style={`background: linear-gradient(135deg, ${mainColor}, ${mainColor}88);`}>
+    <span class="catchcopy">{catchcopy}</span>
+    <h3 class="card-title">{name}</h3>
+  </div>
+  <div class="card-body">
+    <p class="card-desc">{description}</p>
+    <div class="card-tools">
+      {tools.map((tool) => <span class="tool-badge">{tool}</span>)}
+    </div>
+  </div>
+</a>
+
+<style>
+  .course-card {
+    display: block;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    color: var(--color-text);
+  }
+
+  .course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-banner {
+    padding: 24px 20px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .catchcopy {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 2px 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+  }
+
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .card-body {
+    padding: 16px 20px 20px;
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .card-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tool-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-text);
+    background: var(--color-bg-surface);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+</style>

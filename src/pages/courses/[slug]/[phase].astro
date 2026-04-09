@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LessonNav from '../../../components/LessonNav.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const courses = await getCollection('courses');
+  const lessons = await getCollection('lessons');
+
+  const paths = [];
+  for (const course of courses) {
+    for (const phase of course.data.phases) {
+      const lesson = lessons.find(
+        (l) => l.data.course === course.data.slug && l.data.phase === phase.id
+      );
+      if (lesson) {
+        paths.push({
+          params: { slug: course.data.slug, phase: phase.id },
+          props: { course, lesson },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { course, lesson } = Astro.props;
+const { Content } = await render(lesson);
+
+// Find prev/next lessons
+const allLessons = await getCollection('lessons', (entry) => entry.data.course === course.data.slug);
+const sorted = allLessons.sort((a, b) => a.data.order - b.data.order);
+const currentIndex = sorted.findIndex((l) => l.data.phase === lesson.data.phase);
+const prevLesson = currentIndex > 0 ? sorted[currentIndex - 1] : null;
+const nextLesson = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null;
+---
+
+<BaseLayout title={`${lesson.data.title} | ${course.data.name}`}>
+  <div class="container lesson-layout">
+    <aside class="sidebar">
+      <LessonNav
+        courseSlug={course.data.slug}
+        phases={course.data.phases}
+        currentPhase={lesson.data.phase}
+      />
+    </aside>
+
+    <article class="lesson-content prose">
+      <div class="lesson-header">
+        <span class="phase-badge">{lesson.data.phase}</span>
+        <h1>{lesson.data.title}</h1>
+      </div>
+
+      <Content />
+
+      <nav class="lesson-pager">
+        {prevLesson && (
+          <a href={`/courses/${course.data.slug}/${prevLesson.data.phase}`} class="pager-prev">
+            ← {prevLesson.data.title}
+          </a>
+        )}
+        {nextLesson && (
+          <a href={`/courses/${course.data.slug}/${nextLesson.data.phase}`} class="pager-next">
+            {nextLesson.data.title} →
+          </a>
+        )}
+      </nav>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .lesson-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    padding-top: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .lesson-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      order: 2;
+    }
+  }
+
+  .lesson-header {
+    margin-bottom: 32px;
+  }
+
+  .phase-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    background: var(--color-bg-surface);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  .lesson-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .lesson-pager {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-bg-surface);
+    gap: 16px;
+  }
+
+  .pager-prev,
+  .pager-next {
+    padding: 12px 16px;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+  }
+
+  .pager-prev:hover,
+  .pager-next:hover {
+    background: var(--color-bg-surface);
+  }
+
+  .pager-next {
+    margin-left: auto;
+    text-align: right;
+  }
+</style>

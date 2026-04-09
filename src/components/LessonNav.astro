@@ -1,0 +1,86 @@
+---
+interface Phase {
+  id: string;
+  title: string;
+}
+
+interface Props {
+  courseSlug: string;
+  phases: Phase[];
+  currentPhase?: string;
+}
+
+const { courseSlug, phases, currentPhase } = Astro.props;
+---
+
+<nav class="lesson-nav">
+  <h4 class="nav-title">レッスン一覧</h4>
+  <ul>
+    {phases.map((phase) => (
+      <li class:list={[{ active: phase.id === currentPhase }]}>
+        <a href={`/courses/${courseSlug}/${phase.id}`}>
+          <span class="phase-id">{phase.id}</span>
+          <span class="phase-title">{phase.title}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .lesson-nav {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+
+  .nav-title {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 2px;
+  }
+
+  li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    transition: background 0.15s;
+  }
+
+  li a:hover {
+    background: var(--color-bg-surface);
+    color: var(--color-text);
+  }
+
+  li.active a {
+    background: var(--color-bg-surface);
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .phase-id {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    min-width: 32px;
+  }
+
+  li.active .phase-id {
+    color: var(--color-accent);
+  }
+</style>

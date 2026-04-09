@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1309px;
+    height: 597px;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%);
+    font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .title {
+    font-size: 36px;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+  .timeline {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+  .day-card {
+    flex: 1;
+    border-radius: 12px;
+    padding: 16px 12px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .day-label-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .day-weekday {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 1px;
+  }
+  .day-number {
+    font-size: 18px;
+    font-weight: 900;
+    color: #ffffff;
+  }
+  .day-theme {
+    font-size: 13px;
+    font-weight: 800;
+    color: #ffffff;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 8px;
+    margin-bottom: 6px;
+  }
+  .day-actions {
+    font-size: 11px;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* Day別カラー — course_brief.md に合わせて変更 */
+  .day-1 { background: linear-gradient(160deg, #4A90D9, #2C5F8A); }
+  .day-2 { background: linear-gradient(160deg, #7B68EE, #5A4DB5); }
+  .day-3 { background: linear-gradient(160deg, #20B2AA, #148F88); }
+  .day-4 { background: linear-gradient(160deg, #9370DB, #6A4FB5); }
+  .day-5 { background: linear-gradient(160deg, #4A90D9, #2C5F8A); }
+  .day-6 {
+    background: linear-gradient(160deg, #FF8C00, #CC6600);
+    border: 2px solid #FFD700;
+  }
+  .day-6 .day-weekday,
+  .day-6 .day-number { color: #FFD700; }
+  .day-6 .day-theme { font-size: 15px; border-color: rgba(255,215,0,0.4); }
+
+  .special-badge {
+    background: #FFD700;
+    color: #333;
+    font-size: 9px;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="title">{{COURSE_NAME}}ブートキャンプの歩み方</div>
+
+<div class="timeline">
+
+  <!-- Day1 〜 DayN を course_brief.md の内容で生成 -->
+  <div class="day-card day-1">
+    <div class="day-label-wrap">
+      <span class="day-weekday">{{DAY1_WEEKDAY}}</span>
+      <span class="day-number">Day 1</span>
+    </div>
+    <div class="day-theme">{{DAY1_THEME}}</div>
+    <div class="day-actions">{{DAY1_ACTIONS}}</div>
+  </div>
+
+  <!-- 以下、Day数に応じて繰り返し。course_brief.md の総日数分を生成する -->
+
+</div>
+</body>
+</html>

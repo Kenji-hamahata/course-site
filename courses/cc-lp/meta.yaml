@@ -1,0 +1,49 @@
+name: "LP制作マスター講座"
+slug: "cc-lp"
+description: "Claude Codeに話しかけるだけで、プロ品質のランディングページを自動生成する方法を学びます"
+catchcopy: "話しかけるだけでLPが作れる！"
+brand: "スキルプラス"
+target: "LP制作を効率化したい方、プログラミング未経験でもWebページを作りたい方"
+outcome: "Claude Codeを使って、対話だけでLP（HTML/CSS）を自動生成できるようになる"
+tools:
+  - Claude Code
+  - HTML/CSS
+  - ブラウザ
+mainColor: "#FF6B35"
+bgStyle: "gradient"
+projectRepo: "https://github.com/example/cc-lp"
+order: 1
+days:
+  - day: 1
+    weekday: "Monday"
+    theme: "全体像を知る"
+    actions: "講座の目的を理解し、Claude Codeの基本を体験する"
+  - day: 2
+    weekday: "Tuesday"
+    theme: "セットアップ"
+    actions: "Claude Codeをインストールし、プロジェクトを立ち上げる"
+  - day: 3
+    weekday: "Wednesday"
+    theme: "LP制作の実践"
+    actions: "テンプレートを使ってLPを対話で作成する"
+  - day: 4
+    weekday: "Thursday"
+    theme: "カスタマイズ"
+    actions: "デザインの調整、レスポンシブ対応を行う"
+  - day: 5
+    weekday: "Friday"
+    theme: "公開・振り返り"
+    actions: "完成したLPを公開し、学びを振り返る"
+phases:
+  - id: "0-0"
+    title: "ワクワクレッスン：LPが勝手にできる世界"
+  - id: "1-1"
+    title: "セットアップ：Claude Codeを準備する"
+  - id: "2-1"
+    title: "はじめてのLP生成"
+  - id: "2-2"
+    title: "セクションを追加・編集する"
+  - id: "3-1"
+    title: "デザインのカスタマイズ"
+  - id: "4-1"
+    title: "振り返りとまとめ"

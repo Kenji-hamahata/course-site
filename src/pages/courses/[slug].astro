@@ -1,0 +1,257 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LessonNav from '../../components/LessonNav.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const courses = await getCollection('courses');
+  return courses.map((course) => ({
+    params: { slug: course.data.slug },
+    props: { course },
+  }));
+}
+
+const { course } = Astro.props;
+const { name, description, catchcopy, tools, mainColor, phases, projectRepo, days } = course.data;
+
+// Get lessons for this course
+const allLessons = await getCollection('lessons', (entry) => entry.data.course === course.data.slug);
+const sortedLessons = allLessons.sort((a, b) => a.data.order - b.data.order);
+const firstLesson = sortedLessons[0];
+---
+
+<BaseLayout title={`${name} | Course Site`} description={description}>
+  <section class="course-hero" style={`background: linear-gradient(135deg, ${mainColor}, ${mainColor}66);`}>
+    <div class="container">
+      <span class="catchcopy-badge">{catchcopy}</span>
+      <h1>{name}</h1>
+      <p class="course-desc">{description}</p>
+      <div class="tool-list">
+        {tools.map((tool) => <span class="tool-badge">{tool}</span>)}
+      </div>
+      {projectRepo && (
+        <a href={projectRepo} class="repo-link" target="_blank" rel="noopener">
+          プロジェクトテンプレートを見る →
+        </a>
+      )}
+    </div>
+  </section>
+
+  <div class="container course-content">
+    <div class="sidebar">
+      <LessonNav courseSlug={course.data.slug} phases={phases} />
+    </div>
+
+    <div class="main-area">
+      {days && days.length > 0 && (
+        <section class="action-map">
+          <h2>アクションマップ</h2>
+          <div class="timeline">
+            {days.map((day) => (
+              <div class="day-card" style={`background: linear-gradient(160deg, ${mainColor}, ${mainColor}88);`}>
+                <div class="day-label">
+                  <span class="day-weekday">{day.weekday}</span>
+                  <span class="day-number">Day {day.day}</span>
+                </div>
+                <div class="day-theme">{day.theme}</div>
+                <div class="day-actions">{day.actions}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section class="lessons-overview">
+        <h2>レッスン一覧</h2>
+        <div class="lesson-list">
+          {phases.map((phase) => {
+            const lesson = sortedLessons.find((l) => l.data.phase === phase.id);
+            return (
+              <a
+                href={lesson ? `/courses/${course.data.slug}/${phase.id}` : '#'}
+                class:list={['lesson-item', { disabled: !lesson }]}
+              >
+                <span class="lesson-phase">{phase.id}</span>
+                <span class="lesson-title">{phase.title}</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .course-hero {
+    padding: 64px 0 48px;
+  }
+
+  .catchcopy-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  .course-hero h1 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .course-desc {
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 16px;
+    max-width: 600px;
+  }
+
+  .tool-list {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .tool-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .repo-link {
+    display: inline-block;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+  }
+
+  .repo-link:hover {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
+
+  .course-content {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    padding-top: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .course-content {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .action-map {
+    margin-bottom: 48px;
+  }
+
+  .action-map h2 {
+    margin-bottom: 20px;
+  }
+
+  .timeline {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .day-card {
+    flex: 1;
+    min-width: 140px;
+    border-radius: var(--radius-md);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .day-label {
+    text-align: center;
+  }
+
+  .day-weekday {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+  }
+
+  .day-number {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #fff;
+  }
+
+  .day-theme {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 8px;
+  }
+
+  .day-actions {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .lessons-overview h2 {
+    margin-bottom: 16px;
+  }
+
+  .lesson-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    transition: background 0.15s;
+  }
+
+  .lesson-item:hover {
+    background: var(--color-bg-surface);
+  }
+
+  .lesson-item.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .lesson-phase {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    min-width: 36px;
+  }
+
+  .lesson-title {
+    font-weight: 600;
+  }
+</style>

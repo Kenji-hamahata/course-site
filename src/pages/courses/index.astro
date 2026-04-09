@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CourseCard from '../../components/CourseCard.astro';
+import { getCollection } from 'astro:content';
+
+const allCourses = await getCollection('courses');
+const sortedCourses = allCourses.sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="コース一覧 | Course Site">
+  <section class="page-header">
+    <div class="container">
+      <h1>コース一覧</h1>
+    </div>
+  </section>
+
+  <section class="courses-section">
+    <div class="container">
+      <div class="courses-grid">
+        {sortedCourses.map((course) => (
+          <CourseCard
+            slug={course.data.slug}
+            name={course.data.name}
+            catchcopy={course.data.catchcopy}
+            description={course.data.description}
+            tools={course.data.tools}
+            mainColor={course.data.mainColor}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--color-bg-surface);
+  }
+
+  .courses-section {
+    padding: 48px 0;
+  }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+</style>
